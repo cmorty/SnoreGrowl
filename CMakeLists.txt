@@ -1,3 +1,4 @@
+project( snore-gntp-send )
 cmake_minimum_required( VERSION 2.6 )
 
 option(WITH_STATIC    "Build static growl library"           OFF)

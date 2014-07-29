@@ -19,26 +19,45 @@
 extern "C" {
 #endif
 
+typedef struct notification_data
+{
+    const char *app_name;
+    int id;
+    const char *notify;
+    const char *title;
+    const char *message;
+    const char *icon;
+    const char *icon_data;
+    int icon_data_size;
+    const char *url;
+    const char *callback_context;
 
-GROWL_EXPORT int growl( const char *const server,const char *const appname,const char *const notify,const char *const title, const char *const message ,
-                                const char *const icon , const char *const password , const char *url );
-GROWL_EXPORT int growl_tcp_notify( const char *const server,const char *const appname,const char *const notify,const char *const title, const char *const message ,
-                                const char *const password, const char* const url, const char* const icon );
-GROWL_EXPORT int growl_tcp_notify_with_data( const char *const server,const char *const appname,const char *const notify,const char *const title, const char *const message ,
-                                const char *const password, const char* const url, const unsigned char* const icon_data, const long icon_size );
+
+}growl_notification_data;
+
+typedef struct callback_data
+{
+    int id;
+    char *reason;
+    char *data;
+
+}growl_callback_data;
+
+typedef void (*GROWL_CALLBACK)(const growl_callback_data* data);
+
+GROWL_EXPORT int growl_tcp_notify( const char *const server, const char *const password, const growl_notification_data *data );
 GROWL_EXPORT int growl_tcp_register( const char *const server , const char *const appname , const char **const notifications , const int notifications_count , const char *const password, const char *const icon );
 
 
-GROWL_EXPORT int growl_udp( const char *const server,const char *const appname,const char *const notify,const char *const title, const char *const message ,
-                                const char *const icon , const char *const password , const char *url );
-GROWL_EXPORT int growl_udp_notify( const char *const server,const char *const appname,const char *const notify,const char *const title, const char *const message ,
-                                const char *const password );
+GROWL_EXPORT int growl_udp_notify( const char *const server, const char *const password, const growl_notification_data *data);
 GROWL_EXPORT int growl_udp_register( const char *const server , const char *const appname , const char **const notifications , const int notifications_count , const char *const password  );
 
 
 GROWL_EXPORT int growl_init(void);
 
 GROWL_EXPORT void growl_shutdown(void);
+
+GROWL_EXPORT void growl_set_callback(GROWL_CALLBACK callback);
 
 
 #ifdef __cplusplus

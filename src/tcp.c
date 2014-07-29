@@ -67,6 +67,7 @@ growl_tcp_write(int sock, const char *const format, ...) {
   va_end(ap);
 
   while ((stop = strstr(output, "\r\n"))) strcpy(stop, stop + 1);
+//  fprintf(stdout,"%s\r\n", output);
 
   send(sock, output, length, 0);
   send(sock, "\r\n", 2, 0);
@@ -83,7 +84,8 @@ growl_tcp_read(int sock) {
     int len = growsize, pos = 0;
     char* newline;
     while (line) {
-      if (recv(sock, &c, 1, 0) <= 0) break;
+      if (recv(sock, &c, 1, 0) <= 0)
+          break;
       if (c == '\r') continue;
       if (c == '\n') break;
       line[pos++] = c;
