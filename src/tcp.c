@@ -46,6 +46,12 @@ growl_tcp_write_raw(
 }
 
 void
+growl_tcp_write_nl(int sock)
+{
+    send(sock, "\r\n", 2, 0);
+}
+
+void
 growl_tcp_write(int sock, const char *const format, ...) {
   int length;
   char *output;

@@ -3,7 +3,9 @@
 #else
 #include <arpa/inet.h>
 #include <stdint.h>
+#include <pthread.h>
 #endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -121,16 +123,17 @@ growl_set_callback(GROWL_CALLBACK callback)
 
 #ifdef _WIN32
 DWORD WINAPI growl_callback_thread( LPVOID socket )
+#else
+void *growl_callback_thread( void *socket )
+#endif
 {
     int sock = *(int*)socket;
-
     if(gowl_callback)
     {
         growl_callback_data data;
         memset(&data,0, sizeof(growl_callback_data));
         while(1){
             char* line = growl_tcp_read(sock);
-            Sleep(10);
             if(line)
             {
                 if(strncmp(line, "Notification-ID: ", 17) == 0)
@@ -168,8 +171,6 @@ DWORD WINAPI growl_callback_thread( LPVOID socket )
     growl_tcp_close(sock);
     free(socket);
 }
-
-#endif
 
 GROWL_EXPORT
 int
@@ -312,15 +313,15 @@ growl_notification_with_icon(int sock, const char *icon)
     }
 
     if (icon_id) {
-        growl_tcp_write(sock, "");
+        growl_tcp_write_nl(sock);
         growl_tcp_write(sock, "Identifier: %s", icon_id);
         growl_tcp_write(sock, "Length: %ld", icon_size);
-        growl_tcp_write(sock, "");
+        growl_tcp_write_nl(sock);
         while (!feof(icon_file)) {
             size_t bytes_read = fread(buffer, 1, 1024, icon_file);
             if (bytes_read) growl_tcp_write_raw(sock, (const unsigned char *)buffer, bytes_read);
         }
-        growl_tcp_write(sock, "");
+        growl_tcp_write_nl(sock);
     }
 
     if (icon_file) fclose(icon_file);
@@ -328,7 +329,7 @@ growl_notification_with_icon(int sock, const char *icon)
 }
 
 void
-growl_notification_with_data_icon( int sock, const char *icon_data, int icon_data_size)
+growl_notification_with_data_icon( int sock, const char *icon_data, long icon_data_size)
 {
 
     char *icon_id = NULL;
@@ -355,7 +356,7 @@ growl_notification_with_data_icon( int sock, const char *icon_data, int icon_dat
             ptr += send_size;
             rest -= send_size;
         }
-        growl_tcp_write(sock, "");
+        growl_tcp_write_nl(sock);
     }
     if (icon_id) free(icon_id);
 }
@@ -400,7 +401,7 @@ int growl_tcp_notify(const char *const server,
         growl_notification_with_icon(sock, data->icon);
     }
 
-    growl_tcp_write(sock, "");
+    growl_tcp_write_nl(sock);
 
     while (1) {
         char* line = growl_tcp_read(sock);
@@ -427,7 +428,14 @@ int growl_tcp_notify(const char *const server,
     {
         int *socket = malloc(sizeof(int));
         *socket = sock;
+#ifdef _WIN32
+
         CreateThread(NULL, 0, growl_callback_thread, socket, 0, NULL );
+#else
+        pthread_t thread;
+        pthread_create( &thread, NULL, growl_callback_thread, socket);
+
+#endif
     }
     else
     {

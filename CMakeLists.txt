@@ -1,6 +1,8 @@
 project( snore-gntp-send )
 cmake_minimum_required( VERSION 2.6 )
 
+find_package(Threads REQUIRED)
+
 option(WITH_STATIC    "Build static growl library"           OFF)
 
 include_directories ( ./include )
@@ -17,6 +19,8 @@ if( WIN32 )
   link_libraries ( ws2_32 )
 endif( WIN32 )
 
+
+
 set( GROWL_NTP_C_SRC
         src/growl.c
         src/tcp.c
@@ -24,10 +28,12 @@ set( GROWL_NTP_C_SRC
 
 add_library( growl SHARED  ${GROWL_NTP_C_SRC} )
 set_target_properties( growl PROPERTIES COMPILE_FLAGS "-DGROWL_DLL" )
+target_link_libraries( growl ${CMAKE_THREAD_LIBS_INIT})
 
 if( WITH_STATIC )
   add_library( growl-static  STATIC ${GROWL_NTP_C_SRC} )
   set_target_properties( growl-static PROPERTIES COMPILE_FLAGS "-DGROWL_DLL" )
+  target_link_libraries( growl-static ${CMAKE_THREAD_LIBS_INIT})
 endif( WITH_STATIC )
 
 add_library( growl++ SHARED src/growl.cpp )
