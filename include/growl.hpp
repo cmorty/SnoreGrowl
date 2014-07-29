@@ -64,10 +64,10 @@ private:
     std::string password;
     Growl_Protocol protocol;
     std::string application;
-    void Register(std::vector<std::string> &notifications , const std::string &icon = std::string());
+    void Register(const std::vector<std::string> &notifications , const std::string &icon);
 public:
-    Growl(const Growl_Protocol _protocol, const std::string &_password, const std::string &_appliciation, std::vector<std::string> &notifications);
-    Growl(const Growl_Protocol _protocol, const std::string &_server, const std::string &_password, const std::string &_application, std::vector<std::string> &notifications);
+    Growl(const Growl_Protocol _protocol, const std::string &_password, const std::string &_appliciation, const std::vector<std::string> &notifications, const std::string &icon = std::string());
+    Growl(const Growl_Protocol _protocol, const std::string &_server, const std::string &_password, const std::string &_application, const std::vector<std::string> &notifications, const std::string &icon = std::string());
     ~Growl();
     void Notify(const GrowlNotificationData &notification);
 
