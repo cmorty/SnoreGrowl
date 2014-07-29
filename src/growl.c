@@ -142,18 +142,17 @@ void *growl_callback_thread( void *socket )
                 }
                 else if(strncmp(line, "Notification-Callback-Result: ", 30) == 0)
                 {
-                    int size = strlen(line) - 30;
+                    int size = strlen(line) - 30 + 1;
                     data.reason = malloc(size);
                     memcpy(data.reason, line + 30, size);
-                    data.reason[size] = 0;
                 }
                 else if(strncmp(line, "Notification-Callback-Context: ", 31) == 0)
                 {
-                    int size = strlen(line) - 31;
+                    int size = strlen(line) - 31 + 1;
                     data.data = malloc(size);
                     memcpy(data.data, line + 31, size);
-                    data.data[size] = 0;
-                }else if(strlen(line) == 0)
+                }
+                else if(strlen(line) == 0)
                 {
                     free(line);
                     break;
@@ -432,7 +431,6 @@ int growl_tcp_notify(const char *const server,
         int *socket = malloc(sizeof(int));
         *socket = sock;
 #ifdef _WIN32
-
         CreateThread(NULL, 0, growl_callback_thread, socket, 0, NULL );
 #else
         pthread_t thread;
