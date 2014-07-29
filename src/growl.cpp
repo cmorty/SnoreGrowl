@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <iostream>
 
 GrowlNotificationData::GrowlNotificationData(const Growl *parent, const std::string &notification, const int id, const std::string &title, const std::string &message):
     parent(parent),
@@ -72,27 +73,27 @@ growl_notification_data GrowlNotificationData::data() const
     return d;
 }
 
-Growl::Growl(const Growl_Protocol _protocol, const std::string &_password, const std::string &_application, const std::vector<std::string> &notifications, const std::string &icon)
+Growl::Growl(const Growl_Protocol _protocol, const std::string &_password, const std::string &_application)
     : server("localhost"),
       password(_password),
       protocol(_protocol),
-      application(_application) {
+      application(_application)
+{
 
-    Register(notifications, icon);
 }
 
-Growl::Growl(const Growl_Protocol _protocol, const std::string &_server, const std::string &_password, const std::string &_application, const std::vector<std::string> &notifications, const std::string &icon)
+Growl::Growl(const Growl_Protocol _protocol, const std::string &_server, const std::string &_password, const std::string &_application)
     : server(_server),
       password(_password),
       protocol(_protocol),
-      application(_application) {
+      application(_application)
+{
 
-    Register(notifications, icon);
 }
 
 void
-Growl::Register(const std::vector<std::string> &notifications , const std::string &icon) {
-
+Growl::Register(const std::vector<std::string> &notifications , const std::string &icon)
+{
     const char *notify[notifications.size()];
     for(size_t i = 0; i < notifications.size();++i)
     {

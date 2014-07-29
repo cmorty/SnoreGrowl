@@ -46,3 +46,8 @@ target_link_libraries ( gntp-send growl)
 add_executable( gntp-send++ src/gntp-send.cpp )
 target_link_libraries ( gntp-send++ growl growl++)
 
+install(TARGETS growl growl++ RUNTIME DESTINATION bin
+                              LIBRARY DESTINATION lib
+                              ARCHIVE DESTINATION lib)
+
+install(FILES include/growl.h include/growl.hpp DESTINATION include/gntp)

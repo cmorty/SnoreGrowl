@@ -7,7 +7,8 @@ int main(int argc, char **argv) {
   n.push_back("alice");
   n.push_back( "bob" );
   std::auto_ptr<Growl> growl(
-      new Growl(GROWL_TCP,"","gntp_send++", n));
+      new Growl(GROWL_TCP,"","gntp_send++"));
+  growl->Register(n);
 
   GrowlNotificationData data(growl.get(), "bob", 1, "title", "message");
   growl->Notify(data);
