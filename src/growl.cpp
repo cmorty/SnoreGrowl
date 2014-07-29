@@ -94,7 +94,7 @@ Growl::Growl(const Growl_Protocol _protocol, const std::string &_server, const s
 void
 Growl::Register(const std::vector<std::string> &notifications , const std::string &icon)
 {
-    const char *notify[notifications.size()];
+    const char **notify = new const char*[notifications.size()];
     for(size_t i = 0; i < notifications.size();++i)
     {
         notify[i] = notifications[i].c_str();
@@ -115,6 +115,7 @@ Growl::Register(const std::vector<std::string> &notifications , const std::strin
                     notifications.size(),
                     password.c_str());
     }
+	delete[] notify;
 }
 
 Growl::~Growl() {
