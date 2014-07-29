@@ -76,13 +76,12 @@ Growl::Growl(
         const Growl_Protocol _protocol,
         const std::string &_password,
         const std::string &_application,
-        const char **_notifications,
-        const int _notifications_count)
+        std::vector<std::string> &notifications)
     : server("localhost"),
       password(_password),
       protocol(_protocol), application(_application) {
 
-    Register(_notifications, _notifications_count);
+    Register(notifications);
 }
 
 Growl::Growl(
@@ -90,35 +89,36 @@ Growl::Growl(
         const std::string &_server,
         const std::string &_password,
         const std::string &_application,
-        const char **_notifications,
-        const int _notifications_count)
+        std::vector<std::string> &notifications)
     : server(_server),
       password(_password),
       protocol(_protocol), application(_application) {
 
-    Register(_notifications, _notifications_count);
+    Register(notifications);
 }
 
 void
-Growl::Register(
-        const char **const notifications,
-        const int notifications_count,
-        const std::string &icon) {
+Growl::Register(std::vector<std::string> &notifications , const std::string &icon) {
 
+    const char *notify[notifications.size()];
+    for(size_t i = 0; i < notifications.size();++i)
+    {
+        notify[i] = notifications[i].c_str();
+    }
     if (protocol == GROWL_TCP) {
         growl_tcp_register(
                     server.c_str(),
                     application.c_str(),
-                    notifications,
-                    notifications_count,
+                    notify,
+                    notifications.size(),
                     password.c_str(),
                     icon.c_str());
     } else if (protocol == GROWL_UDP) {
         growl_udp_register(
                     server.c_str(),
                     application.c_str(),
-                    notifications,
-                    notifications_count,
+                    notify,
+                    notifications.size(),
                     password.c_str());
     }
 }
@@ -135,6 +135,11 @@ Growl::Notify(const GrowlNotificationData &notification) {
     } else if (protocol == GROWL_UDP) {
         growl_udp_notify( server.c_str(), password.c_str(), &d);
     }
+}
+
+void Growl::setCallback(GROWL_CALLBACK callback)
+{
+    growl_set_callback(callback);
 }
 
 /* vim:set et sw=2 ts=2 ai: */

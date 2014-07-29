@@ -3,9 +3,11 @@
 
 int main(int argc, char **argv) {
   static_cast<void>(argc); static_cast<void>(argv); // prevent unused warnings
-  const char *n[2] = { "alice" , "bob" };
+  std::vector<std::string> n;
+  n.push_back("alice");
+  n.push_back( "bob" );
   std::auto_ptr<Growl> growl(
-      new Growl(GROWL_TCP,"","gntp_send++",(const char **const)n,2));
+      new Growl(GROWL_TCP,"","gntp_send++", n));
 
   GrowlNotificationData data(growl.get(), "bob", 1, "title", "message");
   growl->Notify(data);

@@ -3,6 +3,7 @@
 
 #include <growl.h>
 #include <string>
+#include <vector>
 
 #ifdef _WIN32
 #ifndef GROWL_CPP_STATIC
@@ -63,12 +64,14 @@ private:
     std::string password;
     Growl_Protocol protocol;
     std::string application;
-    void Register(const char **const _notifications, const int _notifications_count, const std::string &icon = std::string());
+    void Register(std::vector<std::string> &notifications , const std::string &icon = std::string());
 public:
-    Growl(const Growl_Protocol _protocol, const std::string &_password, const std::string &_appliciation, const char **const _notifications, const int _notifications_count);
-    Growl(const Growl_Protocol _protocol, const std::string &_server, const std::string &_password, const std::string &_application, const char **const _notifications, const int _notifications_count);
+    Growl(const Growl_Protocol _protocol, const std::string &_password, const std::string &_appliciation, std::vector<std::string> &notifications);
+    Growl(const Growl_Protocol _protocol, const std::string &_server, const std::string &_password, const std::string &_application, std::vector<std::string> &notifications);
     ~Growl();
     void Notify(const GrowlNotificationData &notification);
+
+    static void setCallback(GROWL_CALLBACK callback);
 };
 
 #endif // GROWLXX_HPP_
