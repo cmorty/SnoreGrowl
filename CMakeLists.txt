@@ -1,4 +1,4 @@
-project( snore-gntp-send )
+project( snore-gntp )
 cmake_minimum_required( VERSION 2.6 )
 
 find_package(Threads REQUIRED)
