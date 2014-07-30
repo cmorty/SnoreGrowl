@@ -1,12 +1,7 @@
 #ifndef _MD5_H_
 #define _MD5_H_
 
-#ifdef _MSC_VER
-#pragma warning( disable : 4996 4244 )
-#include <msinttypes/stdint.h>
-#else
 #include <stdint.h>
-#endif
 
 typedef struct {
   uint32_t total[2];
