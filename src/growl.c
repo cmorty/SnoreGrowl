@@ -112,7 +112,7 @@ growl_generate_authheader_alloc(const char*const password) {
     return auth_header;
 }
 
-GROWL_CALLBACK gowl_callback = NULL;
+static GROWL_CALLBACK gowl_callback = NULL;
 
 GROWL_EXPORT
 void
@@ -142,15 +142,15 @@ void *growl_callback_thread( void *socket )
                 }
                 else if(strncmp(line, "Notification-Callback-Result: ", 30) == 0)
                 {
-                    int size = strlen(line) - 30 + 1;
+                    size_t size = strlen(line + 30) + 1;
                     data.reason = malloc(size);
-                    memcpy(data.reason, line + 30, size);
+                    strncpy(data.reason, line + 30, size);
                 }
                 else if(strncmp(line, "Notification-Callback-Context: ", 31) == 0)
                 {
-                    int size = strlen(line) - 31 + 1;
+                    size_t size = strlen(line + 31) + 1;
                     data.data = malloc(size);
-                    memcpy(data.data, line + 31, size);
+                    strncpy(data.data, line + 31, size);
                 }
                 else if(strlen(line) == 0)
                 {
@@ -331,7 +331,7 @@ growl_notification_with_icon(int sock, const char *icon)
 }
 
 void
-growl_notification_with_data_icon( int sock, const char *icon_data, long icon_data_size)
+growl_notification_with_data_icon( int sock, const char *icon_data, size_t icon_data_size)
 {
 
     char *icon_id = NULL;
@@ -345,7 +345,7 @@ growl_notification_with_data_icon( int sock, const char *icon_data, long icon_da
         icon_id = string_to_hex_alloc((const char*) md5tmp, 16);
     }
     if (icon_id) {
-        long rest = icon_data_size;
+        size_t rest = icon_data_size;
         unsigned char *ptr = (unsigned char *) icon_data;
         growl_tcp_write(sock, "Notification-Icon: x-growl-resource://%s", icon_id);
         growl_tcp_write(sock, "%s", "");

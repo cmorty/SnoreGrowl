@@ -1,6 +1,8 @@
 #ifndef _GROWL_H_
 #define _GROWL_H_
 
+#include <string.h>
+
 #ifdef _WIN32
   #ifndef GROWL_STATIC
     #ifdef GROWL_DLL
@@ -28,7 +30,7 @@ typedef struct notification_data
     const char *message;
     const char *icon;
     const char *icon_data;
-    int icon_data_size;
+    size_t icon_data_size;
     const char *url;
     const char *callback_context;
 
