@@ -3,19 +3,7 @@
 
 #include <string.h>
 
-#ifdef _WIN32
-  #ifndef GROWL_STATIC
-    #ifdef GROWL_DLL
-      #define GROWL_EXPORT __declspec(dllexport)
-    #else
-      #define GROWL_EXPORT __declspec(dllimport)
-    #endif
-  #else
-    #define GROWL_EXPORT
-  #endif
-#else
-  #define GROWL_EXPORT
-#endif /*_WIN32 */
+#include "growl_exports.h"
 
 #ifdef __cplusplus
 extern "C" {

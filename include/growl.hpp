@@ -5,20 +5,6 @@
 #include <string>
 #include <vector>
 
-#ifdef _WIN32
-#ifndef GROWL_CPP_STATIC
-#ifdef GROWL_CPP_DLL
-#define GROWL_CPP_EXPORT __declspec(dllexport)
-#else
-#define GROWL_CPP_EXPORT __declspec(dllimport)
-#endif
-#else
-#define GROWL_CPP_EXPORT
-#endif
-#else
-#define GROWL_CPP_EXPORT
-#endif //_WIN32
-
 enum Growl_Protocol { GROWL_UDP , GROWL_TCP };
 
 class Growl;
