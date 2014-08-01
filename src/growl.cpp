@@ -152,4 +152,9 @@ void Growl::setCallback(GROWL_CALLBACK callback)
     growl_set_callback(callback);
 }
 
+void Growl::cleanup()
+{
+    growl_shutdown();
+}
+
 /* vim:set et sw=2 ts=2 ai: */

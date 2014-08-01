@@ -47,6 +47,7 @@ private:
     std::string m_password;
     Growl_Protocol m_protocol;
     std::string m_application;
+
 public:
     Growl(const Growl_Protocol protocol, const std::string &password, const std::string &application);
     Growl(const Growl_Protocol protocol, const std::string &server, const std::string &password, const std::string &application);
@@ -64,6 +65,8 @@ public:
 
 
     static void setCallback(GROWL_CALLBACK callback);
+
+    static void cleanup();
 };
 
 #endif // GROWLXX_HPP_

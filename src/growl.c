@@ -122,7 +122,7 @@ growl_set_callback(GROWL_CALLBACK callback)
 }
 
 #ifdef _WIN32
-DWORD WINAPI growl_callback_thread( LPVOID socket )
+DWORD WINAPI growl_callback_thread( void *socket )
 #else
 void *growl_callback_thread( void *socket )
 #endif
