@@ -63,10 +63,7 @@ public:
 
     Growl_Protocol protocol() const;
 
-
-    static void setCallback(GROWL_CALLBACK callback);
-
-    static bool init();
+    static bool init(GROWL_CALLBACK callback = NULL);
     static bool shutdown();
 
     static bool isRunning(const Growl_Protocol protool, const std::string &server = std::string("localhost"));

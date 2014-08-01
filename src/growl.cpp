@@ -147,14 +147,9 @@ Growl_Protocol Growl::protocol() const
     return m_protocol;
 }
 
-void Growl::setCallback(GROWL_CALLBACK callback)
+bool Growl::init(GROWL_CALLBACK callback)
 {
-    growl_set_callback(callback);
-}
-
-bool Growl::init()
-{
-    return growl_init() == 1;
+    return growl_init(callback) == 1;
 }
 
 bool Growl::shutdown()

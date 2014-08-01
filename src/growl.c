@@ -30,10 +30,13 @@ string_to_hex_alloc(const char* str, int len) {
 }
 
 static volatile int growl_init_ = 0;
+static GROWL_CALLBACK gowl_callback = NULL;
 
 GROWL_EXPORT
-int growl_init() {
-    if (growl_init_ == 0) {
+int growl_init(GROWL_CALLBACK callback) {
+    if (growl_init_ == 0)
+    {
+        gowl_callback = callback;
 #ifdef _WIN32
         WSADATA wsaData;
         if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0) {
@@ -130,15 +133,6 @@ growl_generate_authheader_alloc(const char*const password) {
     return auth_header;
 }
 
-static GROWL_CALLBACK gowl_callback = NULL;
-
-GROWL_EXPORT
-void
-growl_set_callback(GROWL_CALLBACK callback)
-{
-    gowl_callback = callback;
-}
-
 #ifdef _WIN32
 DWORD WINAPI growl_callback_thread( void *socket )
 #else
@@ -209,7 +203,7 @@ growl_tcp_register(
     long icon_size = 0;
     uint8_t buffer[1024];
 
-    growl_init();
+    growl_init(NULL);
     auth_header = growl_generate_authheader_alloc(password);
     sock = growl_tcp_open(server);
     if (sock == -1) goto leave;
@@ -390,7 +384,7 @@ int growl_tcp_notify(const char *const server,
 
     char *auth_header = growl_generate_authheader_alloc(password);
 
-    growl_init();
+    growl_init(NULL);
 
     sock = growl_tcp_open(server);
     if (sock == -1) goto leave;
@@ -510,7 +504,7 @@ int growl_udp_register(
     uint8_t default_notifications_count = notifications_count;
     uint8_t j;
 
-    growl_init();
+    growl_init(NULL);
 
     for(i = 0; i < notifications_count; i++) {
         register_header_length += 3 + strlen(notifications[i]);
@@ -575,7 +569,7 @@ int growl_udp_notify(
 
     if (!data) return -1;
 
-    growl_init();
+    growl_init(NULL);
 
     pointer = 0;
     memcpy(data + pointer, &GROWL_PROTOCOL_VERSION, 1);
