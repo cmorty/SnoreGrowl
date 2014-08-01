@@ -48,12 +48,18 @@ int growl_init() {
 }
 
 GROWL_EXPORT
-void growl_shutdown() {
+int growl_shutdown() {
     if (growl_init_ == 1) {
 #ifdef _WIN32
-        WSACleanup();
-#endif
+        if(WSACleanup() != 0)
+        {
+            return -1;
+        }
+#endif        
+        growl_init_ = 0;
+        return 1;
     }
+    return -1;
 }
 
 static char*

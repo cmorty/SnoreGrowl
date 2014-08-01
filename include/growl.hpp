@@ -66,7 +66,8 @@ public:
 
     static void setCallback(GROWL_CALLBACK callback);
 
-    static void cleanup();
+    static bool init();
+    static bool shutdown();
 };
 
 #endif // GROWLXX_HPP_
