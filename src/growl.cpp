@@ -1,4 +1,5 @@
-#include <growl.hpp>
+#include "growl.hpp"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -47,7 +48,7 @@ growl_notification_data GrowlNotificationData::data(const Growl *sender) const
 {
     growl_notification_data d;
     memset(&d,0,sizeof(growl_notification_data));
-    d.app_name = sender->application.c_str();
+    d.app_name = sender->application().c_str();
     d.notify = notification.c_str();
     d.id = id;
     d.title = title.c_str();
@@ -72,20 +73,20 @@ growl_notification_data GrowlNotificationData::data(const Growl *sender) const
     return d;
 }
 
-Growl::Growl(const Growl_Protocol _protocol, const std::string &_password, const std::string &_application)
-    : server("localhost"),
-      password(_password),
-      protocol(_protocol),
-      application(_application)
+Growl::Growl(const Growl_Protocol protocol, const std::string &password, const std::string &application)
+    : m_server("localhost"),
+      m_password(password),
+      m_protocol(protocol),
+      m_application(application)
 {
 
 }
 
-Growl::Growl(const Growl_Protocol _protocol, const std::string &_server, const std::string &_password, const std::string &_application)
-    : server(_server),
-      password(_password),
-      protocol(_protocol),
-      application(_application)
+Growl::Growl(const Growl_Protocol protocol, const std::string &server, const std::string &password, const std::string &application)
+    : m_server(server),
+      m_password(password),
+      m_protocol(protocol),
+      m_application(application)
 {
 
 }
@@ -98,21 +99,21 @@ Growl::Register(const std::vector<std::string> &notifications , const std::strin
     {
         notify[i] = notifications[i].c_str();
     }
-    if (protocol == GROWL_TCP) {
+    if (m_protocol == GROWL_TCP) {
         growl_tcp_register(
-                    server.c_str(),
-                    application.c_str(),
+                    m_server.c_str(),
+                    m_application.c_str(),
                     notify,
                     notifications.size(),
-                    password.c_str(),
+                    m_password.c_str(),
                     icon.c_str());
-    } else if (protocol == GROWL_UDP) {
+    } else if (m_protocol == GROWL_UDP) {
         growl_udp_register(
-                    server.c_str(),
-                    application.c_str(),
+                    m_server.c_str(),
+                    m_application.c_str(),
                     notify,
                     notifications.size(),
-                    password.c_str());
+                    m_password.c_str());
     }
 	delete[] notify;
 }
@@ -124,11 +125,26 @@ Growl::~Growl() {
 void
 Growl::Notify(const GrowlNotificationData &notification) {
     growl_notification_data d = notification.data(this);
-    if (protocol == GROWL_TCP) {
-        growl_tcp_notify(server.c_str(), password.c_str(), &d);
-    } else if (protocol == GROWL_UDP) {
-        growl_udp_notify( server.c_str(), password.c_str(), &d);
+    if (m_protocol == GROWL_TCP) {
+        growl_tcp_notify(m_server.c_str(), m_password.c_str(), &d);
+    } else if (m_protocol == GROWL_UDP) {
+        growl_udp_notify( m_server.c_str(), m_password.c_str(), &d);
     }
+}
+
+const std::string &Growl::application() const
+{
+    return m_application;
+}
+
+const std::string &Growl::server() const
+{
+    return m_server;
+}
+
+Growl_Protocol Growl::protocol() const
+{
+    return m_protocol;
 }
 
 void Growl::setCallback(GROWL_CALLBACK callback)

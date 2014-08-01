@@ -43,19 +43,25 @@ public:
 
 class GROWL_CPP_EXPORT Growl {
 private:
-    friend class GrowlNotificationData;
-    std::string server;
-    std::string password;
-    Growl_Protocol protocol;
-    std::string application;
+    std::string m_server;
+    std::string m_password;
+    Growl_Protocol m_protocol;
+    std::string m_application;
 public:
-    Growl(const Growl_Protocol _protocol, const std::string &_password, const std::string &_appliciation);
-    Growl(const Growl_Protocol _protocol, const std::string &_server, const std::string &_password, const std::string &_application);
+    Growl(const Growl_Protocol protocol, const std::string &password, const std::string &application);
+    Growl(const Growl_Protocol protocol, const std::string &server, const std::string &password, const std::string &application);
     ~Growl();
 
     void Register(const std::vector<std::string> &notifications, const std::string &icon = std::string());
 
     void Notify(const GrowlNotificationData &notification);
+
+    const std::string &application() const;
+
+    const std::string &server() const;
+
+    Growl_Protocol protocol() const;
+
 
     static void setCallback(GROWL_CALLBACK callback);
 };

@@ -1,5 +1,5 @@
 #include <memory>
-#include <growl.hpp>
+#include "growl.hpp"
 
 int main(int argc, char **argv) {
   static_cast<void>(argc); static_cast<void>(argv); // prevent unused warnings
