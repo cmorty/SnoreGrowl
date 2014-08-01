@@ -10,6 +10,6 @@ int main(int argc, char **argv) {
       new Growl(GROWL_TCP,"","gntp_send++"));
   growl->Register(n);
 
-  GrowlNotificationData data(growl.get(), "bob", 1, "title", "message");
+  GrowlNotificationData data("bob", 1, "title", "message");
   growl->Notify(data);
 }

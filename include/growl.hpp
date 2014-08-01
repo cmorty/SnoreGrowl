@@ -13,9 +13,7 @@ class GROWL_CPP_EXPORT GrowlNotificationData {
 private:
     friend class Growl;
 
-    growl_notification_data data() const;
-
-    const Growl *parent;
+    growl_notification_data data(const Growl* sender) const;
 
     std::string notification;
     int id;
@@ -30,7 +28,7 @@ private:
     std::string callback_data;
 
 public:
-    GrowlNotificationData(const Growl *parent, const std::string &notification, const int id, const std::string &title, const std::string &message);
+    GrowlNotificationData(const std::string &notification, const int id, const std::string &title, const std::string &message);
     ~GrowlNotificationData();
 
     void setIcon(const std::string& icon);

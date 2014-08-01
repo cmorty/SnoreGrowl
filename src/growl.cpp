@@ -4,8 +4,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-GrowlNotificationData::GrowlNotificationData(const Growl *parent, const std::string &notification, const int id, const std::string &title, const std::string &message):
-    parent(parent),
+GrowlNotificationData::GrowlNotificationData(const std::string &notification, const int id, const std::string &title, const std::string &message):
     notification(notification),
     id(id),
     title(title),
@@ -44,11 +43,11 @@ void GrowlNotificationData::setCallbackData(const std::string &data)
     this->callback_data = data;
 }
 
-growl_notification_data GrowlNotificationData::data() const
+growl_notification_data GrowlNotificationData::data(const Growl *sender) const
 {
     growl_notification_data d;
     memset(&d,0,sizeof(growl_notification_data));
-    d.app_name = parent->application.c_str();
+    d.app_name = sender->application.c_str();
     d.notify = notification.c_str();
     d.id = id;
     d.title = title.c_str();
@@ -124,7 +123,7 @@ Growl::~Growl() {
 
 void
 Growl::Notify(const GrowlNotificationData &notification) {
-    growl_notification_data d = notification.data();
+    growl_notification_data d = notification.data(this);
     if (protocol == GROWL_TCP) {
         growl_tcp_notify(server.c_str(), password.c_str(), &d);
     } else if (protocol == GROWL_UDP) {
