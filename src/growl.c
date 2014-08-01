@@ -62,6 +62,18 @@ int growl_shutdown() {
     return -1;
 }
 
+GROWL_EXPORT
+int growl_tcp_is_running(const char *const server)
+{
+    int sock = growl_tcp_open(server);
+    if(sock != -1)
+    {
+        growl_tcp_close(sock);
+        return 1;
+    }
+    return -1;
+}
+
 static char*
 gen_salt_alloc(int count) {
     char* salt = (char*)malloc(count + 1);

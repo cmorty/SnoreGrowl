@@ -162,4 +162,17 @@ bool Growl::shutdown()
     return growl_shutdown() == 1;
 }
 
+bool Growl::isRunning(const Growl_Protocol protool, const std::string &server)
+{
+    if(protool == GROWL_TCP)
+    {
+        return growl_tcp_is_running(server.c_str()) != -1;
+    }
+    else
+    {
+        //TODO: implement
+        return true;
+    }
+}
+
 /* vim:set et sw=2 ts=2 ai: */

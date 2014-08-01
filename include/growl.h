@@ -47,6 +47,8 @@ GROWL_EXPORT int growl_init();
 
 GROWL_EXPORT int growl_shutdown();
 
+GROWL_EXPORT int growl_tcp_is_running(const char *const server);
+
 GROWL_EXPORT void growl_set_callback(GROWL_CALLBACK callback);
 
 

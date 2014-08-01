@@ -68,6 +68,8 @@ public:
 
     static bool init();
     static bool shutdown();
+
+    static bool isRunning(const Growl_Protocol protool, const std::string &server = std::string("localhost"));
 };
 
 #endif // GROWLXX_HPP_
