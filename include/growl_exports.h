@@ -28,7 +28,7 @@
 #endif
 #else
 #define GROWL_CPP_EXPORT
-#endif //_WIN32
+#endif /*_WIN32*/
 
 
-#endif // GROWL_EXPORTS_H
+#endif /*GROWL_EXPORTS_H*/

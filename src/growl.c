@@ -1,4 +1,5 @@
 #ifdef _WIN32
+#include <winsock2.h>
 #include <windows.h>
 #else
 #include <arpa/inet.h>
@@ -272,7 +273,7 @@ growl_tcp_register(
             goto leave;
         } else {
             int len = strlen(line);
-            //             fprintf(stderr, "%s\n", line);
+            /*fprintf(stderr, "%s\n", line);*/
             if (strncmp(line, "GNTP/1.0 -ERROR", 15) == 0) {
                 if (strncmp(line + 15, " NONE", 5) != 0) {
                     fprintf(stderr, "failed to register notification\n");
@@ -352,7 +353,7 @@ growl_notification_with_data_icon( int sock, const char *icon_data, size_t icon_
         uint8_t md5tmp[20];
         memset(md5tmp, 0, sizeof(md5tmp));
         md5_starts(&md5ctx);
-        md5_update(&md5ctx, icon_data, icon_data_size);
+        md5_update(&md5ctx, (uint8_t*)icon_data, icon_data_size);
         md5_finish(&md5ctx, md5tmp);
         icon_id = string_to_hex_alloc((const char*) md5tmp, 16);
     }
@@ -362,7 +363,7 @@ growl_notification_with_data_icon( int sock, const char *icon_data, size_t icon_
         growl_tcp_write(sock, "Notification-Icon: x-growl-resource://%s", icon_id);
         growl_tcp_write(sock, "%s", "");
         growl_tcp_write(sock, "Identifier: %s", icon_id);
-        growl_tcp_write(sock, "Length: %ld", icon_data_size);
+        growl_tcp_write(sock, "Length: %ld", (unsigned long)icon_data_size);
         growl_tcp_write(sock, "%s", "");
         while (rest > 0) {
             long send_size = rest > 1024 ? 1024 : rest;
@@ -425,7 +426,7 @@ int growl_tcp_notify(const char *const server,
             goto leave;
         } else {
             int len = strlen(line);
-            //            fprintf(stderr, "%s\n", line);
+            /*fprintf(stderr, "%s\n", line);*/
             if (strncmp(line, "GNTP/1.0 -ERROR", 15) == 0) {
                 if (strncmp(line + 15, " NONE", 5) != 0) {
                     fprintf(stderr, "failed to post notification\n");

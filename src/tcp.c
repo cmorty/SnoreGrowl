@@ -9,7 +9,7 @@ void
 growl_perror(const char* s) {
   char buf[200];
 
-  if (FormatMessage(
+  if (FormatMessageA(
       FORMAT_MESSAGE_FROM_SYSTEM,
       NULL,
       GetLastError(),
@@ -73,7 +73,7 @@ growl_tcp_write(int sock, const char *const format, ...) {
   va_end(ap);
 
   while ((stop = strstr(output, "\r\n"))) strcpy(stop, stop + 1);
-//  fprintf(stdout,"%s\r\n", output);
+  /*fprintf(stdout,"%s\r\n", output);*/
 
   send(sock, output, length, 0);
   send(sock, "\r\n", 2, 0);
