@@ -1,7 +1,7 @@
-# snore-gntp
+# SnoreGrowl
 =========
 
-snore-gntp is a fork of (gntp-send)[https://github.com/mattn/gntp-send] which is a command line tool for sending Growl notifications.
+SnoreGrowl is a fork of [gntp-send](https://github.com/mattn/gntp-send]) which is a command line tool for sending Growl notifications.
 In difference to gntp-send the focus of this project lies on the libraries and not on the command line tool.
 
 Contained is a C library for Growl notifications and a C++ wrapper.
