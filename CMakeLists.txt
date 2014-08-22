@@ -1,11 +1,13 @@
 project( snore-gntp )
 cmake_minimum_required( VERSION 2.6 )
 
-find_package(Threads REQUIRED)
+include(GenerateExportHeader)
 
 option(WITH_STATIC    "Build static growl library"           OFF)
 
-include_directories ( ./include )
+find_package(Threads REQUIRED)
+
+include_directories ( ./include ${CMAKE_CURRENT_BINARY_DIR} )
 
 if(CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS                  "${CMAKE_CXX_FLAGS}  -Wall -Wextra -Wnon-virtual-dtor -fno-strict-aliasing")
@@ -20,7 +22,6 @@ if( WIN32 )
 endif( WIN32 )
 
 
-
 set( GROWL_NTP_C_SRC
         src/growl.c
         src/tcp.c
@@ -29,6 +30,11 @@ set( GROWL_NTP_C_SRC
 add_library( growl SHARED  ${GROWL_NTP_C_SRC} )
 set_target_properties( growl PROPERTIES COMPILE_FLAGS "-DGROWL_DLL" )
 target_link_libraries( growl ${CMAKE_THREAD_LIBS_INIT})
+
+generate_export_header(growl
+  EXPORT_FILE_NAME growl_exports.h
+  EXPORT_MACRO_NAME GROWL_EXPORT
+)
 
 if( WITH_STATIC )
   add_library( growl-static  STATIC ${GROWL_NTP_C_SRC} )
@@ -39,6 +45,11 @@ endif( WITH_STATIC )
 add_library( growl++ SHARED src/growl.cpp )
 target_link_libraries ( growl++  growl)
 set_target_properties( growl++ PROPERTIES COMPILE_FLAGS "-DGROWL_CPP_DLL" )
+
+generate_export_header(growl++
+  EXPORT_FILE_NAME growl_exports.hpp
+  EXPORT_MACRO_NAME GROWL_CPP_EXPORT
+)
 
 if( WITH_STATIC )
 add_library( growl++-static STATIC src/growl.cpp )
@@ -56,4 +67,4 @@ install(TARGETS growl growl++ RUNTIME DESTINATION bin
                               LIBRARY DESTINATION lib
                               ARCHIVE DESTINATION lib)
 
-install(FILES include/growl.h include/growl.hpp DESTINATION include/gntp)
+install(FILES include/growl.h include/growl.hpp include/growl_exports.h include/growl_exports.hpp DESTINATION include/gntp)

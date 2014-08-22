@@ -2,6 +2,8 @@
 #define GROWLXX_HPP_
 
 #include "growl.h"
+#include "growl_exports.hpp"
+
 #include <string>
 #include <vector>
 
