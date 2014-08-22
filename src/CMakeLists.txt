@@ -1,34 +1,52 @@
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
-
-if( WIN32 )
-    link_libraries( ws2_32 )
-endif( WIN32 )
-
-
 set( GROWL_NTP_C_SRC    growl.c
                         tcp.c
                         md5.c )
 
-add_library( growl SHARED  ${GROWL_NTP_C_SRC} )
-target_link_libraries( growl ${CMAKE_THREAD_LIBS_INIT})
+add_library( snoregrowl SHARED  ${GROWL_NTP_C_SRC} )
+target_link_libraries( snoregrowl PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 
-generate_export_header(growl EXPORT_FILE_NAME growl_exports.h EXPORT_MACRO_NAME GROWL_EXPORT)
+if(WIN32)
+    target_link_libraries( snoregrowl PUBLIC ws2_32)
+endif()
 
-add_library( growl++ SHARED growl.cpp )
-target_link_libraries ( growl++  growl)
+generate_export_header(snoregrowl EXPORT_FILE_NAME growl_exports.h EXPORT_MACRO_NAME GROWL_EXPORT)
 
-generate_export_header(growl++ EXPORT_FILE_NAME growl_exports.hpp EXPORT_MACRO_NAME GROWL_CPP_EXPORT)
+target_include_directories(snoregrowl PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+    $<INSTALL_INTERFACE:include>
+    $<INSTALL_INTERFACE:include/snoregrowl/>
+)
+
+
+add_library( snoregrowl++ SHARED growl.cpp )
+target_link_libraries ( snoregrowl++  snoregrowl)
+
+generate_export_header(snoregrowl++ EXPORT_FILE_NAME growl_exports.hpp EXPORT_MACRO_NAME GROWL_CPP_EXPORT)
 
 add_executable( gntp-send gntp-send.c )
-target_link_libraries ( gntp-send growl)
+target_link_libraries ( gntp-send snoregrowl)
 
 add_executable( gntp-send++ gntp-send.cpp )
-target_link_libraries ( gntp-send++ growl growl++)
+target_link_libraries ( gntp-send++ snoregrowl++)
 
-install(TARGETS growl growl++ RUNTIME DESTINATION bin
+install(TARGETS snoregrowl  EXPORT SnoreGrowlConfig
+                            RUNTIME DESTINATION bin
+                            LIBRARY DESTINATION lib
+                            ARCHIVE DESTINATION lib)
+
+
+install(TARGETS snoregrowl++  EXPORT SnoreGrowl++Config
+                              RUNTIME DESTINATION bin
                               LIBRARY DESTINATION lib
                               ARCHIVE DESTINATION lib)
 
-install(FILES growl.h growl.hpp growl_exports.h growl_exports.hpp DESTINATION include/gntp)
+
+install(EXPORT SnoreGrowlConfig DESTINATION lib/cmake/SnoreGrowl NAMESPACE Snore::)
+
+install(EXPORT SnoreGrowl++Config DESTINATION lib/cmake/SnoreGrowl++ NAMESPACE Snore::)
+
+install(FILES growl.h growl.hpp ${CMAKE_CURRENT_BINARY_DIR}/growl_exports.h ${CMAKE_CURRENT_BINARY_DIR}/growl_exports.hpp DESTINATION include/snoregrowl)
 
