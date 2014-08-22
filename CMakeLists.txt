@@ -1,4 +1,4 @@
-project( snore-gntp )
+project( SnoreGrowl )
 cmake_minimum_required( VERSION 2.6 )
 
 include(GenerateExportHeader)

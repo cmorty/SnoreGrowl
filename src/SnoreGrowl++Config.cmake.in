@@ -1,0 +1,3 @@
+find_package(SnoreGrowl REQUIRED)
+
+include("${CMAKE_CURRENT_LIST_DIR}/SnoreGrowl++Target.cmake")

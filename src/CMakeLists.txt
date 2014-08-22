@@ -9,6 +9,7 @@ target_link_libraries( snoregrowl PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 
 set_target_properties( snoregrowl PROPERTIES EXPORT_NAME SnoreGrowl)
 
+
 if(WIN32)
     target_link_libraries( snoregrowl PUBLIC ws2_32)
 endif()
@@ -23,6 +24,7 @@ target_include_directories(snoregrowl PUBLIC
 )
 
 
+
 add_library( snoregrowl++ SHARED growl.cpp )
 target_link_libraries ( snoregrowl++  snoregrowl)
 set_target_properties( snoregrowl++ PROPERTIES EXPORT_NAME SnoreGrowl++)
@@ -35,21 +37,25 @@ target_link_libraries ( gntp-send snoregrowl)
 add_executable( gntp-send++ gntp-send.cpp )
 target_link_libraries ( gntp-send++ snoregrowl++)
 
-install(TARGETS snoregrowl  EXPORT SnoreGrowlConfig
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/SnoreGrowlConfig.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/SnoreGrowlConfig.cmake" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/SnoreGrowl++Config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/SnoreGrowl++Config.cmake" @ONLY)
+
+install(TARGETS snoregrowl  EXPORT SnoreGrowlTarget
                             RUNTIME DESTINATION bin
                             LIBRARY DESTINATION lib
                             ARCHIVE DESTINATION lib)
 
 
-install(TARGETS snoregrowl++  EXPORT SnoreGrowl++Config
+install(TARGETS snoregrowl++  EXPORT SnoreGrowl++Target
                               RUNTIME DESTINATION bin
                               LIBRARY DESTINATION lib
                               ARCHIVE DESTINATION lib)
 
-
-install(EXPORT SnoreGrowlConfig DESTINATION lib/cmake/SnoreGrowl NAMESPACE Snore::)
-
-install(EXPORT SnoreGrowl++Config DESTINATION lib/cmake/SnoreGrowl++ NAMESPACE Snore::)
-
 install(FILES growl.h growl.hpp ${CMAKE_CURRENT_BINARY_DIR}/growl_exports.h ${CMAKE_CURRENT_BINARY_DIR}/growl_exports.hpp DESTINATION include/snoregrowl)
 
+install(EXPORT SnoreGrowlTarget DESTINATION lib/cmake/SnoreGrowl NAMESPACE Snore::)
+install(EXPORT SnoreGrowl++Target DESTINATION lib/cmake/SnoreGrowl++ NAMESPACE Snore::)
+
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/SnoreGrowlConfig.cmake" DESTINATION lib/cmake/SnoreGrowl)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/SnoreGrowl++Config.cmake" DESTINATION lib/cmake/SnoreGrowl++)
