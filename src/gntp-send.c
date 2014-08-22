@@ -155,7 +155,7 @@ main(int argc, char* argv[]) {
 
     if (!server) server = "127.0.0.1";
 
-    growl_init();
+    growl_init(wait_for_callback?callback:NULL);
 
     growl_notification_data notification;
     memset(&notification,0,sizeof(growl_notification_data));
@@ -169,7 +169,6 @@ main(int argc, char* argv[]) {
     if(wait_for_callback)
     {
         notification.callback_context = "This ia  a test callback context";
-        growl_set_callback(callback);
     }
 
     if (tcpsend) {
