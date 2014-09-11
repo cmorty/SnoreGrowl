@@ -6,8 +6,10 @@ set( GROWL_NTP_C_SRC    growl.c
 
 add_library( snoregrowl SHARED  ${GROWL_NTP_C_SRC} )
 target_link_libraries( snoregrowl PUBLIC ${CMAKE_THREAD_LIBS_INIT})
-
-set_target_properties( snoregrowl PROPERTIES EXPORT_NAME SnoreGrowl)
+set_target_properties( snoregrowl   PROPERTIES
+                                    VERSION "${SNOREGROWL_VERSION_MAJOR}.${SNOREGROWL_VERSION_MINOR}.${SNOREGROWL_VERSION_PATCH}"
+                                    SOVERSION "${SNOREGROWL_VERSION_MAJOR}.${SNOREGROWL_VERSION_MINOR}"
+                                    EXPORT_NAME SnoreGrowl)
 
 
 if(WIN32)
@@ -26,8 +28,11 @@ target_include_directories(snoregrowl PUBLIC
 
 
 add_library( snoregrowl++ SHARED growl.cpp )
-target_link_libraries ( snoregrowl++  snoregrowl)
-set_target_properties( snoregrowl++ PROPERTIES EXPORT_NAME SnoreGrowl++)
+target_link_libraries( snoregrowl++  snoregrowl)
+set_target_properties( snoregrowl++ PROPERTIES
+                                    VERSION "${SNOREGROWL_VERSION_MAJOR}.${SNOREGROWL_VERSION_MINOR}.${SNOREGROWL_VERSION_PATCH}"
+                                    SOVERSION "${SNOREGROWL_VERSION_MAJOR}.${SNOREGROWL_VERSION_MINOR}"
+                                    EXPORT_NAME SnoreGrowl++)
 
 generate_export_header(snoregrowl++ EXPORT_FILE_NAME growl_exports.hpp EXPORT_MACRO_NAME GROWL_CPP_EXPORT)
 
