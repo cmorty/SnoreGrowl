@@ -30,6 +30,7 @@ cache:
     - appveyorHelp.psm1 -> appveyor.yml
 
 environment:
+    QT_VER: 5.5
     matrix:
     - COMPILER: msvc2013
     - COMPILER: msvc2013_64
@@ -37,7 +38,7 @@ environment:
     
 artifacts:
     - path: work\image
-      name: $(APPVEYOR_PROJECT_NAME)-$(COMPILER)
+      name: $(APPVEYOR_PROJECT_NAME)-Qt$(QT_VER)-$(COMPILER)
       
 deploy:
     - provider: Environment
