@@ -39,4 +39,4 @@ Peter Sinnott `<link@redbrick.dcu.ie>`
 
 Dither `<dithersky@myopera.com>`
 
-Patrick von Reth `<vonreth@kde.org>`
+Hannah von Reth `<vonreth@kde.org>`
