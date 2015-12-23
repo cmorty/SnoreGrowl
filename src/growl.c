@@ -205,9 +205,7 @@ void *growl_callback_thread(void *socket)
 
     growl_tcp_close(sock);
     free(socket);
-#ifdef _WIN32
     return 0;
-#endif
 }
 
 GROWL_EXPORT
