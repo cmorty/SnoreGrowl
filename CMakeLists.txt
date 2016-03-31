@@ -7,7 +7,7 @@ include(GenerateExportHeader)
 set(SNOREGROWL_VERSION_MAJOR 0)
 set(SNOREGROWL_VERSION_MINOR 4)
 set(SNOREGROWL_VERSION_PATCH 0)
-
+set(CMAKE_CXX__FLAGS "${CMAKE_CXX__FLAGS} -g")
 
 find_package(Threads REQUIRED)
 

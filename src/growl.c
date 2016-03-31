@@ -44,6 +44,8 @@
 #include "tcp.h"
 #include "growl.h"
 
+#define ERRSTR "GNTP/1.0 -ERROR NONE"
+
 static const char hex_table[] = "0123456789ABCDEF";
 static char *
 string_to_hex_alloc(const char *str, int len)
@@ -301,13 +303,17 @@ growl_tcp_register(
             goto leave;
         } else {
             int len = strlen(line);
-            /*fprintf(stderr, "%s\n", line);*/
-            if (strncmp(line, "GNTP/1.0 -ERROR", 15) == 0) {
-                if (strncmp(line + 15, " NONE", 5) != 0) {
-                    fprintf(stderr, "failed to register notification\n");
+            if (!strncmp(line, ERRSTR, strlen(ERRSTR))) {
+                fprintf(stderr, "Failed to register notification:\n%s\n", line);
+                free(line);
+                //Print full error-message
+                while((line = growl_tcp_read(sock)) != 0){
+                    fprintf(stderr, "%s\n", line);
+                    char firstchar = line[0];
                     free(line);
-                    goto leave;
+                    if(firstchar == '\0') break;
                 }
+                goto leave;
             }
             free(line);
             if (len == 0) {
@@ -466,13 +472,17 @@ int growl_tcp_notify(const char *const server,
             goto leave;
         } else {
             int len = strlen(line);
-            /*fprintf(stderr, "%s\n", line);*/
-            if (strncmp(line, "GNTP/1.0 -ERROR", 15) == 0) {
-                if (strncmp(line + 15, " NONE", 5) != 0) {
-                    fprintf(stderr, "failed to post notification\n");
+            if (!strncmp(line, ERRSTR, strlen(ERRSTR))) {
+                fprintf(stderr, "Failed to post notification:\n%s\n", line);
+                free(line);
+                //Print full error-message
+                while((line = growl_tcp_read(sock)) != 0){
+                    fprintf(stderr, "%s\n", line);
+                    char firstchar = line[0];
                     free(line);
-                    goto leave;
+                    if(firstchar == '\0') break;
                 }
+                goto leave;
             }
             free(line);
             if (len == 0) {
